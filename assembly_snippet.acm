@@ -1,0 +1,55 @@
+.586
+.MODEL FLAT, C
+.STACK
+.DATA
+a db 0ah
+b db 01h
+
+.CODE
+clear PROC
+	XOR eax, eax
+	XOR ebx, ebx
+	RET
+clear ENDP 
+
+nsm PROC
+	MOV al, 36h
+	MOV bl, 01h
+	ADD al, a
+        ADD bl, b
+	IMUL bl
+	NEG ax
+	CBW
+	RET
+nsm ENDP
+
+psm PROC
+	MOV al, 16h
+	MOV bl, 03h
+	ADD al, a
+	ADD bl, b
+	IMUL bl
+	CBW
+	NOT ax
+	RET
+psm ENDP
+END
+
+//.cpp
+extern "C" void clear();
+extern "C" int nsm();
+extern "C" int psm();
+
+#include <iostream>
+
+using namespace std;
+
+int main()
+{
+	clear(); // don't use cout if function does not return a value (e.g. void clear())
+	cout << "min (-128) = " << nsm() << endl;
+	clear();
+	cout << "max = " << psm() << endl;
+	system("Pause");
+	return 1;
+}
